@@ -77,7 +77,7 @@ namespace TestLibrary
             string[] price = actual.Split('-');
             Console.WriteLine(price[1]);
 
-            //Assert.AreEqual(expected,actual);
+            Assert.AreEqual(expected,actual);
         }
 
         private void Login(string log, string pass)
