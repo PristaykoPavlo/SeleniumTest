@@ -18,6 +18,7 @@ namespace TestLibrary
         readonly string password = "12345";
         readonly string login = "pristayko.pavlo@gmail.com";
         readonly string productName = "MacBook";
+        readonly string LoginUrl = "http://atqc-shop.epizy.com/index.php?route=account/login";
         private IWebDriver driver;
 
         [OneTimeSetUp]
@@ -39,6 +40,7 @@ namespace TestLibrary
         {
             WebDriverWait wait;
             IWebElement element;
+
 
             /*Clear Cart*/
             driver.FindElement(By.XPath("//button[contains(@class,'btn btn-inverse btn-block btn-lg dropdown-toggle')]")).Click();
@@ -70,12 +72,15 @@ namespace TestLibrary
             driver.FindElement(By.Id("wishlist-total")).Click();
             driver.FindElement(By.XPath("//td[contains(@class,'text-right')]//button[contains(@class,'btn btn-primary')]")).Click();
 
+            WebDriverWait driverWait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+            driverWait.Until(driver=>driver.FindElement(By.Id("cart-total")).Text.Contains("$500.00"));
 
             string actual = driver.FindElement(By.Id("cart-total")).Text;
             string expected = driver.FindElement(By.XPath("//td[contains(@class,'text-right')]//div[contains(@class,'price')]")).Text;
 
             string[] price = actual.Split('-');
-            Console.WriteLine(price[1]);
+            actual = price[1].Replace(" ", string.Empty);
+            Console.WriteLine(actual);
 
             Assert.AreEqual(expected,actual);
         }
@@ -83,7 +88,7 @@ namespace TestLibrary
         private void Login(string log, string pass)
         {
 
-            driver.Navigate().GoToUrl("http://atqc-shop.epizy.com/index.php?route=account/login");
+            driver.Navigate().GoToUrl(LoginUrl);
 
             driver.FindElement(By.Id("input-email")).SendKeys(log);
             driver.FindElement(By.Id("input-password")).SendKeys(pass);
